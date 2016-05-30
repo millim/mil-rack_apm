@@ -11,7 +11,7 @@ module Mil
       end
 
       def set(key, value)
-        redis  = Redis.get
+        redis = Redis.get
         redis.set key, value, ex: 20
       end
 

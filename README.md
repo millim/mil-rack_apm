@@ -1,41 +1,69 @@
-# Mil::RackApm
+# Mil Rack Apm #
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mil/rack_apm`. To experiment with that code, run `bin/console` for an interactive prompt.
+轻量级的链接使用次数统计的rack插件, 基本只对请求类型, 链接, 调用次数, 平均响应做统计.(过滤参数)
 
-TODO: Delete this and the text above, and describe your gem
+依赖redis
 
-## Installation
+## 安装 ##
 
-Add this line to your application's Gemfile:
+安装gem:
 
-```ruby
-gem 'mil-rack_apm'
+```
+gem install redis
+gem install mil-rack_apm
 ```
 
-And then execute:
+或在你的Gemfile中添加:
 
-    $ bundle
+```ruby
+# Gemfile
+gem 'mil-rack_apm'
 
-Or install it yourself as:
+```
 
-    $ gem install mil-rack_apm
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mil-rack_apm. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+然后运行 `bundle install` .
 
 
-## License
+## 初始化 ##
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+你需要将实例化一个redis的配置给mil-rack_apm
 
+```ruby
+redis = Redis.new
+Mil::RackApm.redis = redis
+```
+
+需要进行统计时,在rack添加中间件
+
+```ruby
+use Mil::RackApm::Data
+```
+
+需要查看统计时,在rack中添加一个链接,例如
+
+```ruby
+map '/web' do
+  run Mil::RackApm::Web.new
+end
+```
+
+这样你可以在 **/web** 进行查看
+
+![](field/web.png)
+
+## 已有问题 ##
+
+1. 为了过滤动态参数,对链接中混合英文和数字,纯数字的路径段进行了文本替换,例如:
+ 
+```ruby
+# 原始path
+/hello/world111000222
+
+# 会统计为
+/hello/:obj
+```
+2. png|css|jpg|js|ico|jpeg|gif|bmp 结尾的path不会计入统计
+
+## Copyright ##
+
+Copyright © 2011-2016. See [LICENSE](https://github.com/millim/mil-rack_apm/blob/master/LICENSE.txt) for details.

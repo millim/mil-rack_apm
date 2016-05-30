@@ -2,13 +2,6 @@ module Mil
   module RackApm
     class Data
 
-      #all url data is in the redis
-      # Rack::Builder.new do
-      #   redis = Redis.new
-      #   use Mil::RackApm::Data, redis
-      #   ...
-      # end
-      #
       def initialize(app)
         @app = app
       end
@@ -17,18 +10,24 @@ module Mil
         start_time = time_now
         status, header, body = @app.call(env)
         request_time = (time_now - start_time) * 1000
-
-        q_path = path_split_to env['REQUEST_PATH']
-        i = "mili-#{env['REQUEST_METHOD']}-#{q_path}"
-        t = "milt-#{env['REQUEST_METHOD']}-#{q_path}"
-        redis.incr i
-        redis.incrbyfloat t, ('%0.3f' % request_time)
+        unless env['REQUEST_PATH'] =~ /.*?\.(png|css|jpg|js|ico|jpeg|gif|bmp)$/
+          q_path = path_split_to env['REQUEST_PATH']
+          i = "mili-#{env['REQUEST_METHOD']}-#{q_path}"
+          t = "milt-#{env['REQUEST_METHOD']}-#{q_path}"
+          redis.incr i
+          redis.incrbyfloat t, ('%0.3f' % request_time)
+        end
         [status, header, body]
       end
 
       def redis
         @redis ||= Mil::RackApm::Redis.get
         @redis
+      end
+
+      def all_key_delete
+        keys = redis.keys 'mil?-*'
+        redis.del keys
       end
 
 

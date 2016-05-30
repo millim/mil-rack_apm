@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["millim"]
   spec.email         = ["237092624@qq.com"]
 
-  spec.summary       = %q{ This is }
-  spec.description   = %q{ 6666}
+  spec.summary       = %q{ This is lit rack apm }
+  spec.description   = %q{ rack apm and have mang buy}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   #   raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   # end
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = Dir['lib/mil/*.rb'] #`git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
