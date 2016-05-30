@@ -10,11 +10,17 @@ module Mil
 
       #[{key: xx, count: 1, times: 23},{key: xx, count: 1, times: 23}]
       def default_data
-        keys = @redis.keys 'mili-*'
+        keys = red.keys 'mili-*'
         count_array = redis_key_count keys
         sort_array =  sort_desc count_array
         data = array_set_data sort_array
         data
+      end
+
+      def delete_key(key)
+         keys = red.keys "*-#{key}"
+         count = red.del keys
+         count.to_i > 0
       end
 
       private

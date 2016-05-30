@@ -46,6 +46,14 @@ module Mil
         @data = data.default_data
         erb :index
       end
+
+      delete '/delete_key' do
+        if data.delete_key params[:key]
+          'ok'
+        else
+          'error'
+        end
+      end
     end
   end
 end

@@ -7,7 +7,7 @@ require 'redis'
 
 redis = Redis.new
 Mil::RackApm.redis = redis
-use Mil::RackApm::Data
+use Mil::RackApm::Data, ['/hello', '/user']
 
 map '/web' do
   run Mil::RackApm::Web.new
