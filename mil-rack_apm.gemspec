@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["millim"]
   spec.email         = ["237092624@qq.com"]
 
-  spec.summary       = %q{ This is lit rack apm }
-  spec.description   = %q{ rack apm and have mang buy}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{ This is lite rack apm web}
+  spec.description   = %q{ This is lite rack apm web, use redis}
+  spec.homepage      = "https://github.com/millim/mil-rack_apm"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
