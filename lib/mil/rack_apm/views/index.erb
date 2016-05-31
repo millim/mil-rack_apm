@@ -12,12 +12,14 @@
 </head>
 <body>
   <header>
-    <br />
     <div class="row">
       <div class="col-xs-offset-1 col-xs-2">
         <h5>MIL RACK APM v0.1.0</h5>
       </div>
-      <div class="col-xs-8">
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-xs-offset-1 col-xs-10">
         <form class="form-inline">
           <div class="form-group">
             <label>METHOD</label>
@@ -31,11 +33,18 @@
           </div>
           <div class="form-group">
             <label>PATH</label>
-            <input type="text" class="form-control" id="path" placeholder="/url">
+            <input type="text" class="form-control" id="path"   placeholder="/url">
           </div>
           <div class="form-group">
             <label>MIN COUNT</label>
-            <input type="number" class="form-control" id="min_count" placeholder="count number">
+            <input type="number" class="form-control" id="min_count"  placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>MAX COUNT</label>
+            <input type="number" class="form-control" id="max_count" placeholder="0">
+          </div>
+          <div class="form-group">
+            <a href="javascript:void(0)" class="btn btn-danger delete_show"  role="button">Delete Show</a>
           </div>
         </form>
       </div>
@@ -55,7 +64,7 @@
           <td class="count"><%= data[:count] %></td>
           <td class="times"><%= '%0.3f' %  (data[:times].to_f  / data[:count].to_f) %>ms</td>
           <td>
-            <a href="javascript:void(0)" class="btn btn-danger btn-xs delete_key" key="<%= "#{data[:request_method]}-#{data[:path]}"%>" role="button">删除</a>
+            <a href="javascript:void(0)" class="btn btn-danger btn-xs delete_key" key="<%= "#{data[:request_method]}-#{data[:path]}"%>" role="button">Delete</a>
           </td>
         </tr>
       <% end %>
