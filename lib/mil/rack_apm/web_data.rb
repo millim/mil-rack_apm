@@ -40,7 +40,10 @@ module Mil
       def array_set_data(array)
         new_array = []
         array.each do |obj|
-          _, request_method, path = obj[0].split '-'
+          ar = obj[0].split '-'
+          ar.shift
+          request_method = ar.shift
+          path = ar.join('-')
           new_array << {request_method: request_method, path: path, count: obj[1], times: red.get("milt-#{request_method}-#{path}") }
         end
         new_array
