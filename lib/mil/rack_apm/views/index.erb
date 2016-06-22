@@ -58,7 +58,7 @@
         <th>REQUEST METHOD</th><th>PATH</th><th>COUNT</th><th>Mean Time</th><th>Action</th>
       </tr>
       <% @data.each do |data| %>
-        <tr class="<%= tr_css data[:request_method] %>">
+        <tr class="<%= tr_css data[:request_method] %>" style="">
           <td class="request_method"><%= data[:request_method] %></td>
           <td class="path"><%= data[:path].nil? ? '/' : data[:path] %></td>
           <td class="count"><%= data[:count] %></td>
