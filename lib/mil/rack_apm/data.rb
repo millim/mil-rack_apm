@@ -1,3 +1,4 @@
+require 'eventmachine'
 module Mil
   module RackApm
     class Data
@@ -5,8 +6,11 @@ module Mil
 
       def initialize(app, skip_path = [])
         @app = app
+        @bs = []
         skip_path = [skip_path] if skip_path.class == String
         @skip_path = skip_path
+        em_run
+        at_exit { em_close }
       end
 
       def call(env)
@@ -16,11 +20,7 @@ module Mil
           request_time = (time_now - start_time) * 1000
           return status, header, body if skip_path? env['REQUEST_PATH']
           unless env['REQUEST_PATH'] =~ /.*?\.(png|css|jpg|js|ico|jpeg|gif|bmp)$/
-            q_path = path_split_to env['REQUEST_PATH']
-            i = "mili-#{env['REQUEST_METHOD']}-#{q_path}"
-            t = "milt-#{env['REQUEST_METHOD']}-#{q_path}"
-            redis.incr i
-            redis.incrbyfloat t, ('%0.3f' % request_time)
+            @bs << [env['REQUEST_METHOD'], env['REQUEST_PATH'], request_time]
           end
           [status, header, body]
         rescue => e
@@ -77,6 +77,35 @@ module Mil
           t
         end
         m.join '/'
+      end
+
+      def em_run
+        begin
+          Thread.start do
+            EM.run{
+              @loop = EM.add_periodic_timer(60) do
+                unless @bs.nil?
+                  @bs.each do |method, path, time|
+                    q_path = path_split_to path
+                    i = "mili-#{method}-#{q_path}"
+                    t = "milt-#{method}-#{q_path}"
+                    redis.incr i
+                    redis.incrbyfloat t, ('%0.3f' % time)
+                  end
+                  @bs = []
+                end
+
+              end
+            }
+          end
+        rescue => e
+          puts 'mil data error'
+        end
+      end
+
+      def em_close
+        EM.cancel_timer(@loop)
+        EM.stop
       end
 
     end
